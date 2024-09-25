@@ -5,7 +5,7 @@
 # Ex.No: 1B CONVERSION OF NON STATIONARY TO STATIONARY DATA
 
 ### AIM:
-To perform regular differncing,seasonal adjustment and log transformatio on international airline passenger data
+To perform regular differncing,seasonal adjustment and log transformatio on international DelhiDelhi climate test.
 ### ALGORITHM:
 1. Import the required packages like pandas and numpy
 2. Read the data using the pandas
@@ -17,34 +17,41 @@ To perform regular differncing,seasonal adjustment and log transformatio on inte
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+
+# Load the dataset
+df = pd.read_csv('delhi_climate_test.csv', index_col='Date', parse_dates=True)
+
+# Plot the original data
+df['Temperature'].plot(figsize=(10,6))
+plt.title('Original Daily Delhi Climate Data')
+plt.show()
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+# Perform seasonal decomposition (assuming daily data with yearly seasonality: period=365)
+decomposition = seasonal_decompose(df['Log_Temperature'], model='additive', period=365)
+
+# Extract and plot the seasonal component
+decomposition.seasonal.plot(figsize=(10,6))
+plt.title('Seasonal Component')
+plt.show()
+
+# Remove the seasonal component to get seasonally adjusted data
+df['Seasonally_Adjusted_Temperature'] = df['Log_Temperature'] - decomposition.seasonal
+
+# Plot the seasonally adjusted data
+df['Seasonally_Adjusted_Temperature'].plot(figsize=(10,6))
+plt.title('Seasonally Adjusted and Log-Transformed Data')
+plt.show()
 from statsmodels.tsa.stattools import adfuller
-%matplotlib inline
 
-train = pd.read_csv("AirPassengers.csv")
-train.timestamp = pd.to_datetime(train.Month, format = '%Y-%m')
-train.drop('Month', axis=1, inplace = True)
-train.head()
-train['#Passengers'].plot()
+# Perform ADF test on the seasonally adjusted data
+adf_result = adfuller(df['Seasonally_Adjusted_Temperature'].dropna())
+print(f'ADF Statistic: {adf_result[0]}')
+print(f'p-value: {adf_result[1]}')
 
-def adf_test(timeseries):
-    print('Results of Dickey-Fuller Test:')
-    dftest = adfuller(timeseries, autolag='AIC')
-    dfoutput = pd.Series(dftest[0:4], index=['Test Statistic', 'p-value', '#Lags Used', 'Number of Observations Used'])
-    for key, value in dftest[4].items():
-        dfoutput['Critical Value (%s)' % key] = value
-    print(dfoutput)
-adf_test(train['#Passengers'])
-
-train['#Passengers_diff'] = train['#Passengers'] - train['#Passengers'].shift(1)
-train['#Passengers_diff'].dropna().plot()
-# Seasonal Differencing
-n=7
-train['#Passengers_diff'] = train['#Passengers'] - train['#Passengers'].shift(n)
-train['#Passengers_diff'].dropna().plot()
-# Transformation
-train['#Passengers_log'] = np.log(train['#Passengers'])
-train['#Passengers_log_diff'] = train['#Passengers_log'] - train['#Passengers_log'].shift(1)
-train['#Passengers_log_diff'].dropna().plot()
+# Interpretation:
+# p-value < 0.05 indicates the time series is stationary
+                            
 ```
 ### OUTPUT:
 
@@ -59,5 +66,4 @@ train['#Passengers_log_diff'].dropna().plot()
 ![image](https://github.com/user-attachments/assets/c05b0246-e203-4888-a127-a61bd1d8ca93)
 
 ### RESULT:
-Thus we have created the python code for the conversion of non stationary to stationary data on international airline passenger
-data.
+Thus we have created the python code for the conversion of non stationary to stationary data on DailyDelhi climate test.
