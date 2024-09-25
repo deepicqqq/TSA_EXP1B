@@ -1,6 +1,5 @@
 ### Name: Deepika p
 ### Register No: 212223240024
-### DATE:
 
 # Ex.No: 1B CONVERSION OF NON STATIONARY TO STATIONARY DATA
 
