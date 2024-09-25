@@ -4,7 +4,7 @@
 # Ex.No: 1B CONVERSION OF NON STATIONARY TO STATIONARY DATA
 
 ### AIM:
-To perform regular differncing,seasonal adjustment and log transformatio on international DelhiDelhi climate test.
+To perform regular differncing,seasonal adjustment and log transformatio on DelhiDelhi climate test.
 ### ALGORITHM:
 1. Import the required packages like pandas and numpy
 2. Read the data using the pandas
